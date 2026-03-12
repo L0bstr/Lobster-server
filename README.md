@@ -50,8 +50,6 @@ Even an old laptop or unused PC will do.
 
 > Minimum specs depend on the OS - some are heavier than others.
 
----
-
 ### 🐧 Choosing an OS
 
 **General checklist:**
@@ -72,8 +70,6 @@ Even an old laptop or unused PC will do.
 
 > I went with Arch - already familiar with it and I want the full learning experience, suffering included.
 
----
-
 ### 🛠️ Configure the system
 
 #### OpenSSH 🌐
@@ -85,7 +81,7 @@ OpenSSH allows to securely access the server shell over a network.
 <summary>Setup</summary>
 
 - Install `openssh` on the server and your main machine.
-- Start the `ssh` service on the server.
+- Enable and start the `ssh` service on the server.
 ```bash
 # Debian/Ubuntu based distros:
 sudo systemctl enable ssh
@@ -147,5 +143,65 @@ ssh server-username@192.168.x.x -p 2222
 
 Nice.<br>
 Now only with the keys that the server know about can access and manage it remotely.
+
+</details>
+
+---
+
+#### UFW 🧱
+
+A firewall that filters network data based on rules on your server.
+
+<details>
+
+<summary>Setup</summary>
+
+- Install `ufw` on the server.
+- Allow connections on port `2222` for `OpenSSH`.
+```bash
+sudo ufw allow 2222/tcp
+```
+- Enable and start `ufw`.
+```bash
+sudo ufw enable
+```
+- Check status.
+```bash
+sudo ufw status verbose
+```
+
+</details>
+
+---
+
+#### Docker 🐳
+Docker allows you to run, monitor and manage services in an isolated environment.
+
+> [!IMPORTANT]
+> Docker bypasses the `ufw` firewall so be aware of the ports you open on the server.
+
+<details>
+
+<summary>Setup</summary>
+
+- Install `docker` on the server.
+- Enable and start `docker`.
+```bash
+sudo systemctl enable docker
+sudo systemctl start docker
+```
+- Add your user to the docker group.
+```bash
+sudo usermod -aG docker $USER
+```
+
+<br>
+
+Now you can run services on your server.<br>
+Let's test this with this command:
+```bash
+docker run --rm -d --name webserver -p 8080:80 nginx
+```
+On your main machine open http://server-ip:8080.
 
 </details>
